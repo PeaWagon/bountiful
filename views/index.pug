@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  p Auto-populate your inventory with the weapons needed to complete your bounties.
+  p This page displays the bounties that the player has collected.
+  p Here are some modifiers that the player can use to pick their weapons.
+  ul
+    li weapon kill trackers (never used, low, or high)
+    li weapons matching the currently selected subclass
+    li double-special loadout
+    li unfinished catalysts in exotic weapons
+    li low-level (or non-masterworked) crafted weapons
+    li weapons for the current season
+    li exclusion list (don't ever equip these weapons)
+    li inclusion list (always equip these weapons)
+    li curated list (I enjoy using these weapons, pick these first)
+  
+  h2 Player Login 
+  p Login form that connects to the player's Bungie acount.
+  form(method="GET", action="/login")
+    button(type="submit") Login

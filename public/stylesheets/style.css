@@ -1,0 +1,20 @@
+/* https://coolors.co/a40e4c-d5f2e3-73ba9b-003e1f-01110a */
+
+:root {
+  --custom-pink: #A40E4C;
+  --custom-white: #D5F2E3;
+  --custom-light-green: #73BA9B;
+  --custom-dark-green: #003E1F;
+  --custom-black: #01110A;
+}
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: var(--custom-dark-green);
+  color: var(--custom-white);
+}
+
+a {
+  color: #00B7FF;
+}
