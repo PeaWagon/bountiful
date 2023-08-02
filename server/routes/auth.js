@@ -24,17 +24,17 @@ var router = express.Router();
 const API_KEY = process.env.API_KEY;
 const CLIENT_ID = process.env.CLIENT_ID;
 
-const authorizationEndpoint = new URL(`https://www.bungie.net/en/oauth/authorize?client_id=${CLIENT_ID}&response_type=code&state=TEST`);
-const tokenEndpoint = new URL("https://www.bungie.net/platform/app/oauth/token/");
 
 
 class OauthHandler {
-  constructor(clientId, state=null) {
+  static tokenEndpoint = new URL("https://www.bungie.net/platform/app/oauth/token/");
+  constructor(clientId, state=null, code=null) {
     this.clientId = clientId;
     if (state === null) {
       state = OauthHandler.getNewState();
     } 
     this.state = state;
+    this.code = code;
   }
 
   async testConnection() {
@@ -59,10 +59,32 @@ class OauthHandler {
     );
   }
 
+  async getToken() {
+    const config = {
+      headers:{
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    };
+    let response = null;
+    const data = `grant_type=authorization_code&code=${this.code}&client_id=${this.clientId}`
+    try {
+      response = await axios.post(OauthHandler.tokenEndpoint, data, config)
+    } catch(error) {
+      console.error(error);
+    }
+    if (response !== null) {
+      console.log(`received response: ${response.data.access_token}`);
+      console.log(`received response: ${response.data.token_type}`);
+      console.log(`received response: ${response.data.expires_in}`);
+      console.log(`received response: ${response.data.membership_id}`);
+    } else {
+      console.error("Could not get token")
+    }
+  }
+
 }
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, next) => {
   const oauthHandler = new OauthHandler(CLIENT_ID);
   console.log(`client id: ${oauthHandler.clientId}`)
   res.redirect(oauthHandler.authorizationEndpoint);
@@ -70,16 +92,17 @@ router.get('/', function(req, res, next) {
 
 
 
-router.post("/code", (req, res, next) => {
-  console.log('iam here');
-    console.log(req.headers);
-    console.log(req.statusCode);
-    console.log(req.body);
-    console.log(res.headers);
-    console.log(res.statusCode);
-    console.log(res.body);
-    console.log(res.URL)
+router.get("/code", async (req, res, next) => {
+    let code =  req.query.code;
+    let state = req.query.state;
+    console.log(`the code is ${code} and the state is ${state}`)
+    const oauthHandler = new OauthHandler(CLIENT_ID, state, code);
+    await oauthHandler.getToken();
     res.redirect("../");
+});
+
+router.get("/logout", (req, res, next) => {
+  console.log("Logging out")
 });
 
 // https://bountiful.ninja/login/code?code=28ad1ebaa6d444e99daab226224cd40c&state=TEST

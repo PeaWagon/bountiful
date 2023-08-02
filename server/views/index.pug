@@ -19,5 +19,7 @@ block content
   
   h2 Player Login 
   p Login form that connects to the player's Bungie acount.
-  form(method="GET", action="/login")
+  form(method="GET", action="/auth")
     button(type="submit") Login
+  form(method="GET", action="/auth/logout")
+    button(type="submit") Logout
