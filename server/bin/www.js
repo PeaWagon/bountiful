@@ -1,12 +1,12 @@
-#!/usr/bin/env node
+// #!/usr/bin/env node
 
 /**
  * Module dependencies.
  */
-
-var app = require('../app');
-var debug = require('debug')('bountiful:server');
-var http = require('http');
+import app from "../app.js";
+import http from "http";
+import debugLib from "debug";
+const debug = debugLib("bountifulNinja:server");
 
 /**
  * Get port from environment and store in Express.
