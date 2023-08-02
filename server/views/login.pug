@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1 Player Login 
+  p Login form that connects to the player's Bungie acount.
+  form(method="POST", action="/auth/login")
+    button(type="submit") Login
