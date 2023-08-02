@@ -14,11 +14,11 @@ class RedisClient {
   }
 
   async insert (key, value) {
-    await client.set(key, JSON.stringify(value))
+    await this.client.set(key, JSON.stringify(value))
   }
 
   async retrieve (key) {
-    value = await client.get(key)
+    const value = await this.client.get(key)
     return JSON.parse(value)
   }
 
