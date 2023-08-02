@@ -53,7 +53,7 @@ class OauthHandler {
     )
   }
 
-  async getToken () {
+  async getTokenDetails () {
     const tokenRequestDatetime = DateTime.utc()
     console.log(`Token request UTC datetime is: ${tokenRequestDatetime}`)
     const config = {
@@ -71,12 +71,15 @@ class OauthHandler {
     if (response !== null) {
       const tokenExpiryDatetime = tokenRequestDatetime.plus({ seconds: response.data.expires_in })
       console.log(`Token expiry UTC datetime is: ${tokenExpiryDatetime}`)
-      // console.log(`received response: ${response.data.access_token}`);
-      // console.log(`received response: ${response.data.token_type}`);
-      // console.log(`received response: ${response.data.expires_in}`);
-      // console.log(`received response: ${response.data.membership_id}`);
+      return {
+        accessToken: response.data.access_token,
+        tokenType: response.data.token_type,
+        tokenExpiryDatetime,
+        membershipId: response.data.membership_id
+      }
     } else {
       console.error('Could not get token')
+      return null
     }
   }
 }

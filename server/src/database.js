@@ -2,12 +2,12 @@ import { createClient } from 'redis'
 
 class RedisClient {
   constructor (url = null) {
-    self.client = createClient(url)
+    this.client = createClient(url)
   }
 
   async connect () {
     try {
-      await self.client.connect()
+      await this.client.connect()
     } catch (error) {
       console.error(`Could not connect to Redis: ${error}`)
     }
@@ -22,25 +22,31 @@ class RedisClient {
     return JSON.parse(value)
   }
 
+  async remove (key) {
+    await this.client.del(key)
+  }
+
   async closeConnection () {
     // preferred method of disconnecting; waits for current transactions to complete
     try {
-      await self.client.quit()
+      await this.client.quit()
     } catch (error) {
       console.error(`Could not close connection to Redis: ${error}`)
       // force closing connection
-      await self.disconnect()
+      await this.disconnect()
     }
   }
 
   async disconnect () {
     // does not wait for ongoing transactions to complete
     try {
-      await self.client.disconnect()
+      await this.client.disconnect()
     } catch (error) {
       console.error(`Could not disconnect from Redis: ${error}`)
     }
   }
 }
+const redisClient = new RedisClient()
+await redisClient.connect()
 
-export default RedisClient
+export default redisClient

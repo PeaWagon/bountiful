@@ -1,9 +1,11 @@
 import express from 'express'
 import OauthHandler from '../src/auth.js'
+import UserSession from '../src/user.js'
+import redisClient from '../src/database.js'
 
 const router = express.Router()
 
-const API_KEY = process.env.API_KEY
+// const API_KEY = process.env.API_KEY
 const CLIENT_ID = process.env.CLIENT_ID
 
 router.get('/login', (req, res, next) => {
@@ -21,13 +23,23 @@ router.get('/code', async (req, res, next) => {
   const state = req.query.state
   console.log(`the code is ${code} and the state is ${state}`)
   const oauthHandler = new OauthHandler(CLIENT_ID, state, code)
-  await oauthHandler.getToken()
-  res.cookie('bountifulNinjaSessionCookie', 'test-cookie', { maxAge: 900000, httpOnly: true })
+  const tokenDetails = await oauthHandler.getTokenDetails()
+  const userSession = new UserSession(
+    tokenDetails.accessToken,
+    tokenDetails.membershipId,
+    tokenDetails.tokenExpiryDatetime,
+    tokenDetails.tokenType,
+    state
+  )
+  await redisClient.insert(userSession.sessionKey, userSession.sessionValue)
+  res.cookie('bountifulNinjaSessionCookie', userSession.sessionKey, { maxAge: 900000, httpOnly: true })
   res.redirect('/')
 })
 
-router.get('/logout', (req, res, next) => {
+router.get('/logout', async (req, res, next) => {
   console.log('Logging out')
+  const bountifulNinjaSessionCookie = req.cookies.bountifulNinjaSessionCookie
+  await redisClient.remove(bountifulNinjaSessionCookie)
   res.clearCookie('bountifulNinjaSessionCookie')
   res.redirect('/auth/login')
 })

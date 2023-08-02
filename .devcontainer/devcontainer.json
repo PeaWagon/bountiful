@@ -15,7 +15,9 @@
 		"ghcr.io/devcontainers-contrib/features/redis-homebrew:1": {
 			"version": "latest"
 		}
-	}
+	},
+	"postStartCommand": "redis-server redis.conf",
+	"postCreateCommand": "redis-server redis.conf"
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
