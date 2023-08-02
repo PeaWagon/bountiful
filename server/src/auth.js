@@ -17,70 +17,68 @@ A typical workflow looks like:
   to the Destiny 2 server (resource server) containing this access code.
 */
 
-
-import axios from 'axios';
-import { DateTime } from "luxon";
+import axios from 'axios'
+import { DateTime } from 'luxon'
 
 class OauthHandler {
-    static tokenEndpoint = new URL("https://www.bungie.net/platform/app/oauth/token/");
-    constructor(clientId, state = null, code = null) {
-        this.clientId = clientId;
-        if (state === null) {
-            state = OauthHandler.getNewState();
-        }
-        this.state = state;
-        this.code = code;
+  static tokenEndpoint = new URL('https://www.bungie.net/platform/app/oauth/token/')
+  constructor (clientId, state = null, code = null) {
+    this.clientId = clientId
+    if (state === null) {
+      state = OauthHandler.getNewState()
     }
+    this.state = state
+    this.code = code
+  }
 
-    async testConnection() {
-        try {
-            const response = await axios.get(this.authorizationEndpoint);
-            console.log(`here is the response: ${response}`);
-            console.log(response.headers);
-            console.log(response.body);
-            console.log(response.status);
-        } catch (error) {
-            console.error(`here is the error: ${error}`);
-        }
+  async testConnection () {
+    try {
+      const response = await axios.get(this.authorizationEndpoint)
+      console.log(`here is the response: ${response}`)
+      console.log(response.headers)
+      console.log(response.body)
+      console.log(response.status)
+    } catch (error) {
+      console.error(`here is the error: ${error}`)
     }
+  }
 
-    static getNewState() {
-        return "TEST"
-    }
+  static getNewState () {
+    return 'TEST'
+  }
 
-    get authorizationEndpoint() {
-        return new URL(
+  get authorizationEndpoint () {
+    return new URL(
             `https://www.bungie.net/en/oauth/authorize?client_id=${this.clientId}&response_type=code&state=${this.state}&reauth=true`
-        );
-    }
+    )
+  }
 
-    async getToken() {
-        const tokenRequestDatetime = DateTime.utc();
-        console.log(`Token request UTC datetime is: ${tokenRequestDatetime}`);
-        const config = {
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            }
-        };
-        let response = null;
-        const data = `grant_type=authorization_code&code=${this.code}&client_id=${this.clientId}`
-        try {
-            response = await axios.post(OauthHandler.tokenEndpoint, data, config)
-        } catch (error) {
-            console.error(error);
-        }
-        if (response !== null) {
-            const tokenExpiryDatetime = tokenRequestDatetime.plus({ seconds: response.data.expires_in });
-            console.log(`Token expiry UTC datetime is: ${tokenExpiryDatetime}`);
-            // console.log(`received response: ${response.data.access_token}`);
-            // console.log(`received response: ${response.data.token_type}`);
-            // console.log(`received response: ${response.data.expires_in}`);
-            // console.log(`received response: ${response.data.membership_id}`);
-        } else {
-            console.error("Could not get token")
-        }
+  async getToken () {
+    const tokenRequestDatetime = DateTime.utc()
+    console.log(`Token request UTC datetime is: ${tokenRequestDatetime}`)
+    const config = {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
     }
-
+    let response = null
+    const data = `grant_type=authorization_code&code=${this.code}&client_id=${this.clientId}`
+    try {
+      response = await axios.post(OauthHandler.tokenEndpoint, data, config)
+    } catch (error) {
+      console.error(error)
+    }
+    if (response !== null) {
+      const tokenExpiryDatetime = tokenRequestDatetime.plus({ seconds: response.data.expires_in })
+      console.log(`Token expiry UTC datetime is: ${tokenExpiryDatetime}`)
+      // console.log(`received response: ${response.data.access_token}`);
+      // console.log(`received response: ${response.data.token_type}`);
+      // console.log(`received response: ${response.data.expires_in}`);
+      // console.log(`received response: ${response.data.membership_id}`);
+    } else {
+      console.error('Could not get token')
+    }
+  }
 }
 
-export default OauthHandler;
+export default OauthHandler

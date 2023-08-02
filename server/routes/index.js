@@ -1,14 +1,14 @@
-import express from 'express';
-var router = express.Router();
+import express from 'express'
+const router = express.Router()
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  let bountifulNinjaSessionCookie = req.cookies.bountifulNinjaSessionCookie;
+router.get('/', function (req, res, next) {
+  const bountifulNinjaSessionCookie = req.cookies.bountifulNinjaSessionCookie
   if (bountifulNinjaSessionCookie === undefined || bountifulNinjaSessionCookie === null) {
-    res.redirect("/auth/login");
+    res.redirect('/auth/login')
   } else {
-    res.render('index', { title: 'Bountiful Ninja' });
+    res.render('index', { title: 'Bountiful Ninja' })
   }
-});
+})
 
-export default router;
+export default router
