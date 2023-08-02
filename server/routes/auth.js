@@ -30,7 +30,8 @@ router.get("/code", async (req, res, next) => {
 
 router.get("/logout", (req, res, next) => {
   console.log("Logging out");
-  res.redirect("/login");
+  res.clearCookie('bountifulNinjaSessionCookie');
+  res.redirect("/auth/login");
 });
 
 // https://bountiful.ninja/login/code?code=28ad1ebaa6d444e99daab226224cd40c&state=TEST
