@@ -5,7 +5,6 @@ import redisClient from '../src/database.js'
 
 const router = express.Router()
 
-// const API_KEY = process.env.API_KEY
 const CLIENT_ID = process.env.CLIENT_ID
 
 router.get('/login', (req, res, next) => {
