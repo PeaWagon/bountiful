@@ -49,7 +49,7 @@ class OauthHandler {
 
   get authorizationEndpoint () {
     return new URL(
-      `https://www.bungie.net/en/oauth/authorize?client_id=${this.clientId}&response_type=code&state=${this.state}&reauth=true`
+      `https://www.bungie.net/en/OAuth/Authorize?client_id=${this.clientId}&response_type=code&state=${this.state}&reauth=true`
     )
   }
 

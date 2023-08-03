@@ -14,6 +14,7 @@ router.get('/login', (req, res, next) => {
 router.post('/login', (req, res, next) => {
   const oauthHandler = new OauthHandler(CLIENT_ID)
   console.log(`client id: ${oauthHandler.clientId}`)
+  console.log(`endpoint: ${oauthHandler.authorizationEndpoint}`)
   res.redirect(oauthHandler.authorizationEndpoint)
 })
 
